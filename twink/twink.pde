@@ -1,9 +1,9 @@
 ArrayList<Linea> lineas; // Lista para gestionar múltiples líneas
 ArrayList<Ellipse> elipses; // Lista para gestionar las elipses
-int maxLineas = 50; // Limitar el número máximo de líneas activas
+int maxLineas = 100; // Limitar el número máximo de líneas activas
 
 void setup() {
-  size(900, 900);  // Define el tamaño de la ventana
+  size(900, 900);  
   background(0);   // Fondo negro inicial
   
   int numPuntos = int(random(30, 60)); // Reduce el número de puntos para mejorar el rendimiento
@@ -13,7 +13,7 @@ void setup() {
     float x = random(width);  // Genera una coordenada x aleatoria
     float y = random(height); // Genera una coordenada y aleatoria
     float size = random(10, 20); // Tamaño aleatorio para las elipses entre 10 y 20 píxeles
-    color col = color(random(255), random(255), random(255)); // Color aleatorio para la elipse
+    color col = color(random(255), random(255), random(255), 50); // Color aleatorio para la elipse
     elipses.add(new Ellipse(x, y, size, col)); // Añade la elipse a la lista
   }
   
