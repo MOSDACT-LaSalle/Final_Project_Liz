@@ -5,6 +5,7 @@ int maxLineas = 20; // Limitar el número máximo de líneas activas
 void setup() {
   size(900, 900);
   background(0); // Fondo negro inicial
+  strokeWeight(1);
   
   int numPuntos = int(random(30, 60)); // Número de puntos aleatorio
 
@@ -39,9 +40,9 @@ void draw() {
     // Verifica si la línea se ha salido de la pantalla
     if (l.isOffScreen()) {
       lineas.remove(i); // Elimina la línea si sale de la pantalla
-      
-      // Generar una nueva línea si la línea no colisionó antes de salir de la pantalla
-      if (lineas.size() < maxLineas) {
+
+      // Solo agrega una nueva línea si hay espacio en maxLineas
+      if (lineas.size() + nuevasLineas.size() < maxLineas) {
         nuevasLineas.add(new Linea(random(width), random(height), random(TWO_PI), color(255)));
       }
       
@@ -57,9 +58,13 @@ void draw() {
         color newColor = e.col; // Cambia el color de la línea al del círculo
 
         // Crea dos nuevas líneas en ángulos ligeramente distintos
-        nuevasLineas.add(new Linea(l.x, l.y, l.angle + HALF_PI + random(-QUARTER_PI, QUARTER_PI), newColor));
-        nuevasLineas.add(new Linea(l.x, l.y, l.angle - HALF_PI + random(-QUARTER_PI, QUARTER_PI), newColor));
-        
+        if (lineas.size() + nuevasLineas.size() + 2 <= maxLineas) {
+          nuevasLineas.add(new Linea(l.x, l.y, l.angle + HALF_PI + random(-QUARTER_PI, QUARTER_PI), newColor));
+          nuevasLineas.add(new Linea(l.x, l.y, l.angle - HALF_PI + random(-QUARTER_PI, QUARTER_PI), newColor));
+        } else if (lineas.size() + nuevasLineas.size() + 1 <= maxLineas) {
+          nuevasLineas.add(new Linea(l.x, l.y, l.angle + HALF_PI + random(-QUARTER_PI, QUARTER_PI), newColor));
+        }
+
         lineas.remove(i); // Elimina la línea original después de la colisión
         colisiono = true; // Marca que ocurrió una colisión
         break; // Salir del bucle de colisiones para que no se procesen múltiples colisiones en un solo frame
@@ -72,9 +77,9 @@ void draw() {
   }
 
   // Añadir las nuevas líneas generadas por colisiones o cuando una línea sale de la pantalla
-  if (lineas.size() + nuevasLineas.size() < maxLineas) {
-    lineas.addAll(nuevasLineas);
-  }
+  lineas.addAll(nuevasLineas);
+
+  fondo(); // Esta función sigue vacía, pero puedes llenarla si es necesario
 }
 
 class Linea {
@@ -132,4 +137,8 @@ class Ellipse {
     float dy = py - y;
     return sqrt(dx*dx + dy*dy) < size / 2;
   }
+}
+
+void fondo(){
+  // Vacía, podrías eliminarla o llenarla si necesitas un fondo dinámico
 }
