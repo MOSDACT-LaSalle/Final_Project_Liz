@@ -1,59 +1,85 @@
 ArrayList<Linea> lineas; // Lista para gestionar múltiples líneas
 ArrayList<Ellipse> elipses; // Lista para gestionar las elipses
-int maxLineas = 100; // Limitar el número máximo de líneas activas
+int maxLineas = 20; // Limitar el número máximo de líneas activas
 
 void setup() {
-  size(900, 900);  
-  background(0);   // Fondo negro inicial
+  size(900, 900);
+  background(0); // Fondo negro inicial
   
-  int numPuntos = int(random(30, 60)); // Reduce el número de puntos para mejorar el rendimiento
+  int numPuntos = int(random(30, 60)); // Número de puntos aleatorio
 
   elipses = new ArrayList<Ellipse>();
   for (int i = 0; i < numPuntos; i++) {
-    float x = random(width);  // Genera una coordenada x aleatoria
-    float y = random(height); // Genera una coordenada y aleatoria
-    float size = random(10, 20); // Tamaño aleatorio para las elipses entre 10 y 20 píxeles
-    color col = color(random(255), random(255), random(255), 50); // Color aleatorio para la elipse
+    float x = random(width);  // Coordenada x aleatoria
+    float y = random(height); // Coordenada y aleatoria
+    float size = random(30, 50); // Tamaño aleatorio para las elipses
+    color col = color(random(255), random(255), random(255)); // Color aleatorio para la elipse
     elipses.add(new Ellipse(x, y, size, col)); // Añade la elipse a la lista
   }
   
   lineas = new ArrayList<Linea>();
-  lineas.add(new Linea(random(width), random(height), random(TWO_PI), color(255))); // Inicializa la primera línea con color blanco
+  lineas.add(new Linea(random(width), random(height), random(TWO_PI), color(255))); // Línea inicial blanca
 }
 
 void draw() {
+  // No borrar el fondo, para que las líneas permanezcan en la pantalla
+  
+  // Dibuja las elipses
   for (Ellipse e : elipses) {
     e.display();
   }
   
+  ArrayList<Linea> nuevasLineas = new ArrayList<Linea>(); // Lista temporal para nuevas líneas
+
   for (int i = lineas.size() - 1; i >= 0; i--) {
     Linea l = lineas.get(i);
     l.update();
     l.display();
     
+    // Verifica si la línea se ha salido de la pantalla
     if (l.isOffScreen()) {
-      lineas.remove(i);
-      if (lineas.size() < maxLineas) { // Limita el número de líneas activas para mejorar el rendimiento
-        lineas.add(new Linea(random(width), random(height), random(TWO_PI), color(255))); // Genera una nueva línea si toca el borde
+      lineas.remove(i); // Elimina la línea si sale de la pantalla
+      
+      // Generar una nueva línea si la línea no colisionó antes de salir de la pantalla
+      if (lineas.size() < maxLineas) {
+        nuevasLineas.add(new Linea(random(width), random(height), random(TWO_PI), color(255)));
       }
-    } else {
-      for (Ellipse e : elipses) {
-        if (e.contains(l.x, l.y)) {
-          color newColor = e.col; // Cambia el color de la línea al color del punto
-          if (lineas.size() < maxLineas) { // Limita el número de líneas activas para mejorar el rendimiento
-            lineas.add(new Linea(l.x, l.y, l.angle + HALF_PI, newColor)); // Nueva línea perpendicular
-            lineas.add(new Linea(l.x, l.y, l.angle - HALF_PI, newColor)); // Nueva línea perpendicular en la otra dirección
-          }
-          lineas.remove(i); // Elimina la línea original
-          break;
-        }
+      
+      continue; // Salta al siguiente ciclo
+    }
+    
+    boolean colisiono = false; // Marca si se produce una colisión
+
+    // Verificar colisiones con las elipses
+    for (Ellipse e : elipses) {
+      if (e.contains(l.x, l.y)) {
+        // Si ocurre una colisión, generar nuevas líneas y eliminar la línea original
+        color newColor = e.col; // Cambia el color de la línea al del círculo
+
+        // Crea dos nuevas líneas en ángulos ligeramente distintos
+        nuevasLineas.add(new Linea(l.x, l.y, l.angle + HALF_PI + random(-QUARTER_PI, QUARTER_PI), newColor));
+        nuevasLineas.add(new Linea(l.x, l.y, l.angle - HALF_PI + random(-QUARTER_PI, QUARTER_PI), newColor));
+        
+        lineas.remove(i); // Elimina la línea original después de la colisión
+        colisiono = true; // Marca que ocurrió una colisión
+        break; // Salir del bucle de colisiones para que no se procesen múltiples colisiones en un solo frame
       }
     }
+
+    if (colisiono) {
+      break; // Salir del bucle principal de la línea si ocurrió una colisión
+    }
+  }
+
+  // Añadir las nuevas líneas generadas por colisiones o cuando una línea sale de la pantalla
+  if (lineas.size() + nuevasLineas.size() < maxLineas) {
+    lineas.addAll(nuevasLineas);
   }
 }
 
 class Linea {
   float x, y;
+  float prevX, prevY; // Posiciones anteriores
   float angle;
   float step = 5;
   color col; // Color de la línea
@@ -63,18 +89,20 @@ class Linea {
     this.y = y;
     this.angle = angle;
     this.col = col;
+    this.prevX = x;
+    this.prevY = y;
   }
   
   void update() {
-    float xPrev = x;
-    float yPrev = y;
+    prevX = x; // Guarda la posición anterior
+    prevY = y;
     x += cos(angle) * step;
     y += sin(angle) * step;
   }
   
   void display() {
     stroke(col); // Color de la línea
-    line(x, y, x - cos(angle) * step, y - sin(angle) * step);
+    line(prevX, prevY, x, y); // Dibuja la línea desde la posición anterior hasta la actual
   }
   
   boolean isOffScreen() {
