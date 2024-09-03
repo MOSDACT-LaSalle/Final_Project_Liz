@@ -1,3 +1,22 @@
+/*---------------------------------
+ Name: Elisabet Romo Heredia
+ Date: Sept 2024
+ Tittle:  Esporas en Danza
+ Description:
+ 
+ Este proyecto explora el crecimiento orgánico 
+ de formas abstractas. Elipses se mueven lentamente por el lienzo, 
+ y las líneas, interactúan con estas formas adoptando su color, 
+ creando un diálogo visual entre movimiento y transformación. 
+ La obra refleja la expansión silenciosa y constante de lo orgánico 
+ en un entorno digital.
+ 
+ Links:
+ https://www.lipsum.com/feed/html
+ https://www.lipsum.com/feed/html
+ -----------------------------------*/
+
+
 int numElipses = 30; // Número de elipses que genera+
 
 float[][] elipseCoords = new float[numElipses][2]; // Coordenadas x, y de cada elipse
@@ -14,11 +33,11 @@ float op3 = random(10,50);
 float op4 = random(10,50);
 
 color[] paletaColores = {
-  color(220, 99, 140,  op),
-  color(164, 131, 159, op1),
-  color(206, 169, 161, op2),
-  color(225, 200, 193, op3),
-  color(243, 232, 226, op4)
+  color(27, 67, 50,  op),
+  color(45, 106, 79, op1),
+  color(116, 198, 157, op2),
+  color(149, 213, 178, op3),
+  color(183, 228, 199, op4)
 };
 
 // Arrays para las líneas
@@ -36,7 +55,7 @@ void setup() {
   // Inicializar el buffer fuera de pantalla
   buffer = createGraphics(width, height);
   buffer.beginDraw();
-  buffer.background(30, 30, 62);
+  buffer.background(8, 28, 21);
   buffer.endDraw();
   
   // Inicializar propiedades de las elipses
@@ -60,14 +79,14 @@ void setup() {
     {width/2, height/2, width/2, height/2}  // Línea 3
   };
  
-  colors = new int[] {color(67, 73, 112), color(67, 73, 112), color(67, 73, 112)};
+  colors = new int[] {color(64, 145, 108), color(64, 145, 108), color(64, 145, 108)};
   weights = new float[] {random(5, 10), random(10, 20), random(6, 9)};
   ranges = new float[][] {{-5, 5}, {-10, 10}, {-7, 7}};
 }
 
 void draw() {
   // Limpiar el lienzo principal
-  background(30, 30, 62);
+  background(8, 28, 21);
   
   // Dibujar los trazos (líneas) en el buffer
   buffer.beginDraw();
@@ -140,7 +159,7 @@ boolean isPointInsideEllipse(float px, float py, float ex, float ey, float esize
 void drawBlurryEllipse(float x, float y, float size, color c) {
   noStroke();
   for (int i = 0; i < 10; i++) {
-    float alpha = map(i, 0, 9, 50, 5); //ultimos dos num maxima opacidad y minima opacidad
+    float alpha = map(i, 0, 9, 20, 5); //ultimos dos num maxima opacidad y minima opacidad
     float s = size + i * 10; // Aumentar ligeramente el tamaño en cada paso
     fill(c, alpha);
     ellipse(x, y, s, s);
