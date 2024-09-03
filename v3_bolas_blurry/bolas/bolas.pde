@@ -1,24 +1,30 @@
-// Número de elipses a generar
-int numElipses = 30;
+int numElipses = 30; // Número de elipses que genera+
 
 float[][] elipseCoords = new float[numElipses][2]; // Coordenadas x, y de cada elipse
-float[] elipseSizes = new float[numElipses]; // Tamaño de cada elipse
-int[] elipseColors = new int[numElipses]; // Color de cada elipse
+float[]   elipseSizes = new float[numElipses]; // Tamaño de cada elipse
+int[]     elipseColors = new int[numElipses]; // Color de cada elipse
 float[][] elipseVelocities = new float[numElipses][2]; // Vector de movimiento de cada elipse
 
 // Paleta de colores específica
+
+float  op = random(100,150); //opacidad de las elipses
+float op1 = random(50, 100);
+float op2 = random(100,110);
+float op3 = random(10,50);
+float op4 = random(10,50);
+
 color[] paletaColores = {
-  color(220, 99, 140),
-  color(164, 131, 159),
-  color(206, 169, 161),
-  color(225, 200, 193),
-  color(243, 232, 226)
+  color(220, 99, 140,  op),
+  color(164, 131, 159, op1),
+  color(206, 169, 161, op2),
+  color(225, 200, 193, op3),
+  color(243, 232, 226, op4)
 };
 
 // Arrays para las líneas
-int[][] coords;
-int[] colors;
-float[] weights;
+int[][]   coords;
+int[]     colors;  
+float[]   weights;
 float[][] ranges;
 
 // Buffer gráfico fuera de pantalla
@@ -56,7 +62,7 @@ void setup() {
  
   colors = new int[] {color(67, 73, 112), color(67, 73, 112), color(67, 73, 112)};
   weights = new float[] {random(5, 10), random(10, 20), random(6, 9)};
-  ranges = new float[][] {{-5, 5}, {-10, 10}, {-15, 15}};
+  ranges = new float[][] {{-5, 5}, {-10, 10}, {-7, 7}};
 }
 
 void draw() {
@@ -130,12 +136,12 @@ boolean isPointInsideEllipse(float px, float py, float ex, float ey, float esize
   return (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1;
 }
 
-// Nueva función para dibujar elipses borrosas
+// Función para dibujar elipses borrosas
 void drawBlurryEllipse(float x, float y, float size, color c) {
   noStroke();
-  for (int i = 0; i < 5; i++) {
-    float alpha = map(i, 0, 4, 30, 25); //ultimos dos num maxima opacidad y minima opacidad
-    float s = map(i, 0, 4, size, size * 1.2);
+  for (int i = 0; i < 10; i++) {
+    float alpha = map(i, 0, 9, 50, 5); //ultimos dos num maxima opacidad y minima opacidad
+    float s = size + i * 10; // Aumentar ligeramente el tamaño en cada paso
     fill(c, alpha);
     ellipse(x, y, s, s);
   }
