@@ -33,7 +33,7 @@ float tam_min=2;
 float tam_max = 10; //tamamños de las lines
 
 float tam_min_ellipses=1;
-float tam_max_ellipses = 15; //tamamños de las ellipses( si están separados tienes mas control de cada tamaño, antes estaban con el mismo parametro)
+float tam_max_ellipses = 10; //tamamños de las ellipses( si están separados tienes mas control de cada tamaño, antes estaban con el mismo parametro)
 
 int numElipses = 50; // Número de elipses que genera+
 
@@ -47,16 +47,16 @@ float[][] elipseVelocities = new float[numElipses][2]; // Vector de movimiento d
 
 float  op = random(100, 150); //opacidad de las elipses
 float op1 = random(50, 100);
-float op2 = random(100, 110);
+float op2 = random(50, 100);
 float op3 = random(10, 50);
 float op4 = random(10, 50);
 
 color[] paletaColores = {
   color(27, 67, 50, op),
   color(45, 106, 79, op1),
-  color(116, 198, 157, op2),
-  color(202, 229, 168, op3),
-  color(183, 228, 199, op4)
+  color(155, 201, 189, op2),
+  color(210, 226, 151, op3),
+  color(202, 229, 168, op4)
 };
 
 // Arrays para las líneas

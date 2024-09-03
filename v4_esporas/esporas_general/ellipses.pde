@@ -41,7 +41,7 @@ void drawBlurryEllipse(float x, float y, float size, color c) {
   buffer_ellipses.noStroke();
   for (int i = 0; i < numElipses; i++) {
 
-    float alpha = map(i, 0, numElipses, 20, 5); //ultimos dos num maxima opacidad y minima opacidad
+    float alpha = map(i, 0, numElipses, 10, 5); //ultimos dos num maxima opacidad y minima opacidad
     float s = size + i * 2 ; // Aumentar ligeramente el tamaño en cada paso
     buffer_ellipses.fill(c, alpha);
 
